@@ -1,9 +1,3 @@
-from deprecated.FARLBasic import *
-
-# from Environments.CartPoleEnvironment import CartPoleEnvironment
-# from Environments.CartPoleEnvironmentG import CartPoleEnvironment
-from Environments.CartPoleEnvironmentGN import CartPoleEnvironment
-
 # from kNNQ import kNNQ
 # from algorithms.kNNQC import kNNQC
 from fastrl.valuefunctions.ExaSCIPY import Exa as kNNQC

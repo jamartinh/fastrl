@@ -2,9 +2,9 @@ import time
 
 import pickle
 
-from Environments.AcrobotEnvironmentG import AcrobotEnvironment
+from fastrl.Environments.AcrobotEnvironmentG import AcrobotEnvironment
 from fastrl.actionselection.ActionSelection import *
-from deprecated.FARLBasic import *
+
 from fastrl.valuefunctions.kNNSCIPY import kNNQ
 
 
