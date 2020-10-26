@@ -2,10 +2,10 @@ from setuptools import setup
 
 setup(
     name='fastrl',
-    version='1.0',
-    packages=['examples', 'algorithms', 'valuefunctions', 'actionselection'],
+    version='',
+    packages=['fastrl'],
     package_dir={'': 'fastrl'},
-    url='',
+    url='https://github.com/jamartinh/fastrl',
     license='MIT',
     author='Jose Antonio Martin H',
     author_email='xjamartinh@gmail.com',
