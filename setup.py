@@ -4,7 +4,6 @@ setup(
     name='fastrl',
     version='',
     packages=['fastrl'],
-    package_dir={'': 'fastrl'},
     url='https://github.com/jamartinh/fastrl',
     license='MIT',
     author='Jose Antonio Martin H',

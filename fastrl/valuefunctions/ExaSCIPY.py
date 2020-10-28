@@ -1,6 +1,7 @@
-from fastrl.valuefunctions.FAInterface import FARL
-from scipy.spatial import cKDTree
 import numpy as np
+from scipy.spatial import cKDTree
+
+from fastrl.valuefunctions.FAInterface import FARL
 
 
 class Exa(FARL):
@@ -117,7 +118,7 @@ class Exa(FARL):
         action = np.dot(actionvalues, self.ac)
         return action, actionlist
 
-    def get_value(self, s):
+    def get_value(self, s, a=None):
         """ Return the Q value of state (s) for action (a)
         """
         knn = self.GetkNNSet(s)
