@@ -125,7 +125,7 @@ class FARLBase:
         for i in range(1, maxsteps + 1):
 
             # selects an action using the epsilon greedy selection strategy
-            a = self.SelectAction(s)
+            a,v = self.SelectAction(s)
 
             # do the selected action and get the next state
             sp, r, done, info = self.Environment.step(a)
@@ -136,10 +136,12 @@ class FARLBase:
             # update the Qtable, that is,  learn from the experience
             vp = self.Q(sp)
             target_value = r + self.gamma * max(vp) * (not done)
-            sp = self.Q.update(s, a, target_value)
+            self.Q.update(s, a, target_value)
 
             # update the current variables
+            # update the current variables
             s = sp
+
 
             # increment the step counter.
             steps = steps + 1
