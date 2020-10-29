@@ -1,4 +1,4 @@
-from algorithms.FARLBasicGYM import FARLBase
+from fastrl.algorithms.FARLBasicGYM import FARLBase
 import gym
 from fastrl.valuefunctions.kNNSCIPY import kNNQ
 from fastrl.actionselection.ActionSelection import EpsilonGreedyActionSelection

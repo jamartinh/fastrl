@@ -1,4 +1,4 @@
-from algorithms.FARLBasicGYM import FARLBase
+from fastrl.algorithms.FARLBasicGYM import FARLBase
 import gym
 from fastrl.valuefunctions.kNNFaiss import kNNQFaiss
 import numpy as np
