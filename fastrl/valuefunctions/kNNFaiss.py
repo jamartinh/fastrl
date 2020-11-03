@@ -39,6 +39,7 @@ class kNNQFaiss(FARL):
         # self.index.add(x=self.cl)
 
         print("building value function memory")
+        res = faiss.StandardGpuResources()  # use a single GPU
         nlist = 100
         quantizer = faiss.IndexFlatL2(self.dimension)  # the other index
         self.index = faiss.IndexIVFFlat(quantizer, self.dimension, nlist)
@@ -47,6 +48,7 @@ class kNNQFaiss(FARL):
         assert self.index.is_trained
 
         self.index.add(self.cl)
+        self.index = faiss.index_cpu_to_gpu(res, 0, self.index)
         print("value function memory done...")
 
         # self.index.nprobe = 10
