@@ -1,6 +1,7 @@
 from fastrl.algorithms.FARLBasicGYM import FARLBase
 import gym
 from fastrl.valuefunctions.kNNFaiss import kNNQFaiss
+from fastrl.valuefunctions.kNNSCIPY import kNNQ
 import numpy as np
 from fastrl.actionselection.ActionSelection import EpsilonGreedyActionSelection
 import pickle
@@ -26,7 +27,7 @@ def MountainCarExperiment(Episodes=100, nk=1):
 
     # best
     nk = 10
-    # Q = kNNQ(nactions=n_actions, low=np.clip(Env.observation_space.low, -5, 5), high=np.clip(Env.observation_space.high,-5,5), n_elemns=[15, 15, 15, 15], k=nk + 1, alpha=5, lm=0.95)
+    #Q = kNNQ(nactions=n_actions, low=np.clip(Env.observation_space.low, -5, 5), high=np.clip(Env.observation_space.high,-5,5), n_elemns=[15, 15, 15, 15], k=nk + 1, alpha=5, lm=0.95)
     Q = kNNQFaiss(nactions=n_actions, low=np.clip(Env.observation_space.low, -5, 5), high=np.clip(Env.observation_space.high, -5, 5), n_elemns=[15, 15, 15, 15], k=nk + 1, alpha=5, lm=0.95)
 
     # Get the Action Selector

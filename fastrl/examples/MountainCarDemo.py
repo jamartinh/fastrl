@@ -25,8 +25,8 @@ def MountainCarExperiment(Episodes=100, nk=1):
 
     # best
     nk = 10
-    #Q = kNNQ(nactions=n_actions, low=Env.observation_space.low, high=Env.observation_space.high, n_elemns=[15, 15], k=9, alpha=1.0, lm=0.95)
-    Q = kNNQFaiss(nactions=n_actions, low=Env.observation_space.low, high=Env.observation_space.high, n_elemns=[15, 15], k=9, alpha=1.0, lm=0.95)
+    Q = kNNQ(nactions=n_actions, low=Env.observation_space.low, high=Env.observation_space.high, n_elemns=[15, 15], k=9, alpha=1.0, lm=0.95)
+    #Q = kNNQFaiss(nactions=n_actions, low=Env.observation_space.low, high=Env.observation_space.high, n_elemns=[15, 15], k=9, alpha=1.0, lm=0.95)
 
     # Get the Action Selector
     As = EpsilonGreedyActionSelection(epsilon=1.0)

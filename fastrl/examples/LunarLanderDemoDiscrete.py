@@ -31,8 +31,8 @@ def Experiment(Episodes=100, nk=1):
     nk = 27
     # Q = kNNQ(nactions=n_actions, low=np.clip(Env.observation_space.low, -5, 5), high=np.clip(Env.observation_space.high,-5,5), n_elemns=[15, 15, 15, 15], k=nk + 1, alpha=5, lm=0.95)
     n_elems = [8 for _ in range(Env.observation_space.low.shape[0])]
-    #Q = kNNQFaiss(nactions=n_actions, low=np.clip(Env.observation_space.low, -1, 1), high=np.clip(Env.observation_space.high, -1, 1), n_elemns=n_elems, k=nk, alpha=0.1, lm=0.95)
-    Q = kNNQFaissExt(nactions=n_actions, low=np.clip(Env.observation_space.low, -1, 1), high=np.clip(Env.observation_space.high, -1, 1), n_elemns=n_elems, k=nk, alpha=2, lm=0.95)
+    Q = kNNQFaiss(nactions=n_actions, low=np.clip(Env.observation_space.low, -1, 1), high=np.clip(Env.observation_space.high, -1, 1), n_elemns=n_elems, k=nk, alpha=0.1, lm=0.95)
+    #Q = kNNQFaissExt(nactions=n_actions, low=np.clip(Env.observation_space.low, -1, 1), high=np.clip(Env.observation_space.high, -1, 1), n_elemns=n_elems, k=nk, alpha=2, lm=0.95)
 
     # Get the Action Selector
     As = EpsilonGreedyActionSelection(epsilon=0.1)

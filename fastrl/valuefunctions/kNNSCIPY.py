@@ -1,5 +1,6 @@
-from scipy.spatial import KDTree
 import numpy as np
+from scipy.spatial import KDTree
+
 from fastrl.valuefunctions.FAInterface import FARL
 
 
@@ -26,9 +27,8 @@ class kNNQ(FARL):
 
         self.lbounds = np.array(self.lbounds)
         self.ubounds = np.array(self.ubounds)
-        self.cl = np.array(self.RescaleInputs(self.cl))
+        self.cl = np.array(self.rescale_inputs(self.cl))
         self.knntree = KDTree(self.cl, 100)
-
 
     def actualize(self):
         self.knntree = KDTree(self.cl, 100)
@@ -46,59 +46,55 @@ class kNNQ(FARL):
 
         return y
 
-    def Load(self, strfilename):
+    def load(self, strfilename):
         self.Q = np.load(strfilename)
 
-    def Save(self, strfilename):
+    def save(self, strfilename):
         np.save(strfilename, self.Q)
 
-    def ResetTraces(self):
+    def reset_traces(self):
         self.e *= 0.0
         # self.actualize()
 
-    def RescaleInputs(self, s):
-        return self.ScaleValue(np.array(s), self.lbounds, self.ubounds, -1.0, 1.0)
+    def rescale_inputs(self, s):
+        return self.scale_value(np.array(s), self.lbounds, self.ubounds, -1.0, 1.0)
 
-    def ScaleValue(self, x, from_a, from_b, to_a, to_b):
+    def scale_value(self, x, from_a, from_b, to_a, to_b):
         return to_a + (((x - from_a) / (from_b - from_a)) * (to_b - to_a))
 
-    def GetkNNSet(self, s):
+    def get_knn_set(self, s):
 
         if np.allclose(s, self.last_state) and self.knn != []:
             return self.knn
 
         self.last_state = s
-        state = self.RescaleInputs(s)
+        state = self.rescale_inputs(s)
 
         d, self.knn = self.knntree.query(state, self.k, eps=0.0, p=2)
 
-        print(d.shape)
-        print(self.knn.shape)
-
-
-        self.ac = 1.0 / (1.0 + d**2)  # calculate the degree of activation
+        self.ac = 1.0 / (1.0 + d ** 2)  # calculate the degree of activation
         self.ac /= sum(self.ac)
         return self.knn
 
-    def CalckNNQValues(self, M):
-        Qvalues = np.dot(np.transpose(self.Q[M]), self.ac)
-        return Qvalues
+    def calc_knn_q_values(self, M):
+        q_values = np.dot(np.transpose(self.Q[M]), self.ac)
+        return q_values
 
     def get_value(self, s, a=None):
         """ Return the Q value of state (s) for action (a)
         """
-        M = self.GetkNNSet(s)
+        M = self.get_knn_set(s)
 
         if a is None:
-            return self.CalckNNQValues(M)
+            return self.calc_knn_q_values(M)
 
-        return self.CalckNNQValues(M)[a]
+        return self.calc_knn_q_values(M)[a]
 
     def update(self, s, a, v, gamma=1.0):
         """ update action value for action(a)
         """
 
-        M = self.GetkNNSet(s)
+        M = self.get_knn_set(s)
 
         if self.lm > 0:
             # cumulating traces
@@ -121,6 +117,6 @@ class kNNQ(FARL):
         return True
 
     def get_population(self):
-        pop = self.ScaleValue(self.cl, -1.0, 1.0, self.lbounds, self.ubounds)
+        pop = self.scale_value(self.cl, -1.0, 1.0, self.lbounds, self.ubounds)
         for i in range(self.shape[0]):
             yield pop[i]
