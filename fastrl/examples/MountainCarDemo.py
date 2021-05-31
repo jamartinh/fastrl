@@ -25,7 +25,7 @@ def MountainCarExperiment(Episodes=100, nk=1):
 
     # best
     nk = 10
-    Q = kNNQ(nactions=n_actions, low=Env.observation_space.low, high=Env.observation_space.high, n_elemns=[15, 15], k=9, alpha=1.0, lm=0.95)
+    Q = kNNQ(nactions=n_actions, low=Env.observation_space.low, high=Env.observation_space.high, n_elemns=[35, 35], k=10, alpha=2, lm=0.95)
     #Q = kNNQFaiss(nactions=n_actions, low=Env.observation_space.low, high=Env.observation_space.high, n_elemns=[15, 15], k=9, alpha=1.0, lm=0.95)
 
     # Get the Action Selector
@@ -44,7 +44,7 @@ def MountainCarExperiment(Episodes=100, nk=1):
         # result = MC.q_learning_episode(1000)
         t2 = time.perf_counter() - t1
         As.epsilon *= 0.9
-        Q.alpha *= 0.995
+        #Q.alpha *= 0.995
 
         # MC.PlotLearningCurve(i, result[1], MC.SelectAction.epsilon)
         # MC.Environment.PlotPopulation(MC.Q)

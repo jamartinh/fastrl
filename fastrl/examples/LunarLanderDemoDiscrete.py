@@ -30,7 +30,7 @@ def Experiment(Episodes=100, nk=1):
     # best
     nk = 27
     # Q = kNNQ(nactions=n_actions, low=np.clip(Env.observation_space.low, -5, 5), high=np.clip(Env.observation_space.high,-5,5), n_elemns=[15, 15, 15, 15], k=nk + 1, alpha=5, lm=0.95)
-    n_elems = [8 for _ in range(Env.observation_space.low.shape[0])]
+    n_elems = [16 for _ in range(Env.observation_space.low.shape[0])]
     Q = kNNQFaiss(nactions=n_actions, low=np.clip(Env.observation_space.low, -1, 1), high=np.clip(Env.observation_space.high, -1, 1), n_elemns=n_elems, k=nk, alpha=0.1, lm=0.95)
     #Q = kNNQFaissExt(nactions=n_actions, low=np.clip(Env.observation_space.low, -1, 1), high=np.clip(Env.observation_space.high, -1, 1), n_elemns=n_elems, k=nk, alpha=2, lm=0.95)
 
@@ -39,7 +39,7 @@ def Experiment(Episodes=100, nk=1):
     # As = e_softmax_selection(epsilon=0.1)
 
     # Build the Agent
-    Trainer = FARLBase(Q, Env, As, gamma=0.999)
+    Trainer = FARLBase(Q, Env, As, gamma=0.99)
     Trainer.Environment.graphs = True
     # Trainer.Environment.PlotPopulation(Trainer.Q)
     render = False
@@ -62,17 +62,18 @@ def Experiment(Episodes=100, nk=1):
 
         if i % 10 == 0:
             ax.plot(range(1, len(y) + 1), y, 'b', label='true')
-            ax.plot(range(1, len(y) + 1), pd.Series(y).rolling(20).mean(), 'g', label='soft')
+            ax.plot(range(1, len(y) + 1), pd.Series(y).rolling(20).mean(), 'g', label='moving avg')
             ax.set_title(f"Episode: {i} reward:{result[0]:.2f}  Steps: {result[1]} alpha: {Q.alpha:.2f} epsilon: {As.epsilon:.2f}")
             ax.grid('on')
             # ax.axis([1, i, 0, 1100])
             ax.set_xlabel('Episodes')
             ax.set_ylabel('Reward')
             fig.canvas.draw()
-            # plt.draw()
-            plt.pause(0.01)
+            #plt.draw()
+            #plt.legend()
+            plt.pause(0.5)
         print(f"Episode: {i} reward:{result[0]}  Steps: {result[1]} time: {t2} alpha: {Q.alpha} epsilon: {As.epsilon}")
-        if i >= 1900:
+        if i >= 1000:
             render = True
 
     return x, y, nk

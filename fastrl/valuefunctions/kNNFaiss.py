@@ -3,6 +3,7 @@ from fastrl.valuefunctions.FAInterface import FARL
 import faiss
 from scipy.special import softmax
 
+
 class kNNQFaiss(FARL):
 
     def __init__(self, nactions, low, high, n_elemns, k=1, alpha=0.3, lm=0.95):
@@ -11,13 +12,13 @@ class kNNQFaiss(FARL):
         self.lbounds = low
         self.ubounds = high
         self.cl = self.ndlinspace(n_elemns).astype(np.float32)
-        #self.cl = self.random_space(npoints=150000).astype('float32')
+        # self.cl = self.random_space(npoints=150000).astype('float32')
 
         self.k = k
         self.shape = self.cl.shape
         self.nactions = nactions
 
-        self.Q = np.zeros((self.shape[0], nactions)) + -100.0
+        self.Q = np.zeros((self.shape[0], nactions)) + 0.0
         # self.Q         = uniform(-100,0,(self.shape[0],nactions))+0.0
 
         self.e = np.zeros((self.shape[0], nactions)) + 0.0
@@ -39,7 +40,7 @@ class kNNQFaiss(FARL):
         # self.index.add(x=self.cl)
 
         print("building value function memory")
-        #res = faiss.StandardGpuResources()  # use a single GPU
+
         nlist = 100
         quantizer = faiss.IndexFlatL2(self.dimension)  # the other index
         self.index = faiss.IndexIVFFlat(quantizer, self.dimension, nlist)
@@ -48,7 +49,8 @@ class kNNQFaiss(FARL):
         assert self.index.is_trained
 
         self.index.add(self.cl)
-        #self.index = faiss.index_cpu_to_gpu(res, 0, self.index)
+        # res = faiss.StandardGpuResources()  # use a single GPU
+        # self.index = faiss.index_cpu_to_gpu(res, 0, self.index)
         print("value function memory done...")
 
         # self.index.nprobe = 10
@@ -104,7 +106,7 @@ class kNNQFaiss(FARL):
 
         self.knn = np.squeeze(self.knn)
 
-        # self.ac = 1.0 / (1.0 + d)  # calculate the degree of activation
+        # self.ac = 1.0 / (1.0 + d ** 2)  # calculate the degree of activation
         # self.ac /= sum(self.ac)
         self.ac = softmax(-np.sqrt(d))
 
