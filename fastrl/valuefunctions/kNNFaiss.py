@@ -156,3 +156,56 @@ class kNNQFaiss(FARL):
         pop = self.scale_value(self.cl, -1.0, 1.0, self.lbounds, self.ubounds)
         for i in range(self.shape[0]):
             yield pop[i]
+
+
+class kNNQFaissB(kNNQFaiss):
+
+    def __init__(self, dataset, low, high, k=1, alpha=0.3, lm=0.95):
+        episodes = dataset.episodes
+        num_states = sum([len(episode.observations) for episode in episodes])
+        action_size = episodes[0].action_size
+
+        # Initialize Q values for all state-action pairs
+        self.Q = np.zeros((num_states, action_size), dtype=np.float32) + 0.0
+
+        # Observation dimension
+        self.dimension = int(low.shape[0])
+        self.lbounds = low
+        self.ubounds = high
+        self.cl = np.concatenate([episode.observations for episode in episodes], axis=0).astype(np.float32)
+
+        self.k = k
+        self.shape = self.cl.shape
+        self.e = np.zeros((num_states, action_size))
+
+        # self.ac         = zeros((self.shape[0]))+0.0 #classifiers activation
+        self.ac = []
+
+        self.knn = []
+        self.alpha = alpha
+        self.lm = lm  # good 0.95
+        self.last_state = np.zeros((1, self.shape[1])) + 0.0
+
+        self.lbounds = np.array(self.lbounds)
+        self.ubounds = np.array(self.ubounds)
+
+        self.cl = np.array(self.rescale_inputs(self.cl))
+
+        # self.index = faiss.IndexFlatL2(self.dimension)
+        # self.index.add(x=self.cl)
+
+        print("building value function memory")
+
+        nlist = 100
+        quantizer = faiss.IndexFlatL2(self.dimension)  # the other index
+        self.index = faiss.IndexIVFFlat(quantizer, self.dimension, nlist)
+        assert not self.index.is_trained
+        self.index.train(self.cl)
+        assert self.index.is_trained
+
+        self.index.add(self.cl)
+        # res = faiss.StandardGpuResources()  # use a single GPU
+        # self.index = faiss.index_cpu_to_gpu(res, 0, self.index)
+        print("value function memory done...")
+
+        # self.index.nprobe = 10
